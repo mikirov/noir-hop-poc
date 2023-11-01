@@ -1,0 +1,8 @@
+[package]
+name = "hop_poc"
+type = "bin"
+authors = ["Vladimir Trifonov, Mihail Kirov"]
+compiler_version = "0.17.0"
+
+[dependencies]
+trie = {path = "lib/noir-tree-proofs/lib" }
