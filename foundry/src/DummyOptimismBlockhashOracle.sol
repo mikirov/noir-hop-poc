@@ -16,6 +16,9 @@ interface IBlockhashOracle {
 /// @author LimeChain team
 /// @dev This is a mock implementation for testing purposes
 contract DummyOptimismBlockhashOracle is Ownable, IBlockhashOracle {
+
+    constructor() Ownable(msg.sender) {}
+
     /// @dev Mapping of block numbers to their corresponding blockhashes
     mapping(uint256 => bytes32) blockNumberToBlockhash;
 

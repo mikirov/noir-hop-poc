@@ -33,7 +33,7 @@ contract OptimismVerifier {
     function verify(bytes calldata _proof, bytes32[] calldata _publicInputs)
         external
     {
-        require(verifier.verify(_proof, _publicInputs), "Invalid proof");
-        slotAttestations[keccack256(_publicInputs)] = true;
+        verifier.verify(_proof, _publicInputs);
+        //slotAttestations[uint256(keccak256(abi.encode(_publicInputs)))] = true;
     }
 }
