@@ -154,6 +154,11 @@ async fn main() -> web3::Result<()> {
             .await?;
 
         let unwrapped = &proof.unwrap_or_default();
+        println!("unwrapped proof: {:?}", unwrapped);
+        println!("nonce: {}", unwrapped.nonce);
+        println!("balance: {}", unwrapped.balance);
+        println!("storage_hash: {}", unwrapped.storage_hash);
+        println!("code_hash: {}", unwrapped.code_hash);
 
         let mut account_value_rlp_stream = RlpStream::new();
         account_value_rlp_stream
