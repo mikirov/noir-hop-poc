@@ -154,11 +154,6 @@ async fn main() -> web3::Result<()> {
             .await?;
 
         let unwrapped = &proof.unwrap_or_default();
-        println!("unwrapped proof: {:?}", unwrapped);
-        println!("nonce: {}", unwrapped.nonce);
-        println!("balance: {}", unwrapped.balance);
-        println!("storage_hash: {}", unwrapped.storage_hash);
-        println!("code_hash: {}", unwrapped.code_hash);
 
         let mut account_value_rlp_stream = RlpStream::new();
         account_value_rlp_stream
@@ -216,8 +211,18 @@ async fn main() -> web3::Result<()> {
         let mut storage_value_bytes = [0u8; 32];
         storage_key.to_big_endian(&mut storage_key_bytes);
         storage_value.to_big_endian(&mut storage_value_bytes);
+        let mut bytes = Vec::new();
+
+        // Unwrap the block hash and extend the byte vector with its bytes
+        bytes.extend_from_slice(&block.hash.unwrap().as_bytes());
+        // Extend the byte vector with the bytes of target_account, storage_key_bytes, and storage_value_bytes
+        bytes.extend_from_slice(&target_account.as_bytes());
+        bytes.extend_from_slice(&storage_key_bytes);
+        bytes.extend_from_slice(&storage_value_bytes);
+        let public_input_hash_bytes = keccak256(&bytes);
 
         if &args[1] == "gen_prove_params" {
+            println!("public_input_hash = {:?}", public_input_hash_bytes);
             println!("block_hash = {:?}", block.hash.unwrap().as_bytes());
             println!("account_key = {:?}", target_account.as_bytes());
             println!("account_value = {:?}", account_value_rlp_stream.as_raw());
@@ -235,11 +240,7 @@ async fn main() -> web3::Result<()> {
                 &unwrapped.storage_proof[0].proof.len()
             );
         } else if &args[1] == "gen_verify_params" {
-            println!("account_key = {:?}", target_account.as_bytes());
-            println!("account_value = {:?}", account_value_rlp_stream.as_raw());
-            println!("block_hash = {:?}", block.hash.unwrap().as_bytes());
-            println!("storage_key = {:?}", storage_key_bytes);
-            println!("storage_value = {:?}", storage_value_bytes);
+            println!("public_input_hash = {:?}", public_input_hash_bytes);
         } else {
             panic!("Invalid command!");
         }

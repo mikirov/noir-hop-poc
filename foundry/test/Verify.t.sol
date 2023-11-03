@@ -28,11 +28,15 @@ contract VerifyTest is Test{
 
         address account = 0x32307adfFE088e383AFAa721b06436aDaBA47DBE; // OptimismUselessToken ERC20
         bytes32 slot = bytes32(uint256(2)); // totalSupply
-        uint256 value = 102000000000000000000000; // 102000 ether
+        uint256 slotValue = 102000000000000000000000; // 102000 ether
+
 
         string memory proof = vm.readLine("./circuits/proofs/hop_poc.proof");
         bytes memory proofBytes = vm.parseBytes(proof);
-
-        wrapper.verify(proofBytes, );
+        console.log(proofBytes.length);
+        bytes32 publicInputHash = keccak256(abi.encodePacked(blockHash, account, slot, slotValue));
+        console.log(publicInputHash.length);
+        console.logBytes32(publicInputHash);
+        wrapper.verify(proofBytes, account, slot, slotValue, blockNumber);
     }
 }
